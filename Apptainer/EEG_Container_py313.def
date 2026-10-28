@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: python:3.13-slim
+
+%post
+    printf 'APT::Sandbox::User "root";\n' > /etc/apt/apt.conf.d/00-no-sandbox
+    apt-get update && apt-get install -y --no-install-recommends \
+        libfreetype6-dev libpng-dev pkg-config \
+        build-essential
+    rm -rf /var/lib/apt/lists/*
+
+    pip install --no-cache-dir \
+        mne \
+        matplotlib \
+        numpy \
+        scipy \
+        pandas \
+        requests \
+        pymatreader \
+        h5py
+
+%environment
+    export PYTHONUNBUFFERED=1
+
+%runscript
+    exec /bin/bash "$@"
